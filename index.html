@@ -360,8 +360,8 @@
   /* GRID */
   .grid{
     display:grid;
-    grid-template-columns:repeat(2, 1fr);
-    gap:28px;
+    grid-template-columns:repeat(4, 1fr);
+    gap:20px;
   }
   .card{
     background:var(--bg);
@@ -443,9 +443,11 @@
   .player-frame{
     max-width:min(1000px, 90vw);
     max-height:85vh;
+    aspect-ratio:16/9;
   }
   .player-modal.vertical-video .player-frame{
     max-width:min(420px, 90vw);
+    aspect-ratio:9/16;
   }
   .player-frame video{
     width:100%;
@@ -453,6 +455,7 @@
     max-height:85vh;
     display:block;
     background:#000;
+    object-fit:contain;
   }
   .youtube-frame{
     display:none;
@@ -634,7 +637,7 @@
   }
 
   @media (max-width: 1024px) and (min-width: 781px){
-    .grid{grid-template-columns:repeat(2, 1fr);}
+    .grid{grid-template-columns:repeat(3, 1fr);}
   }
 
   @media (max-width: 780px){
