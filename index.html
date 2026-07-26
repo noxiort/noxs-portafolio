@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOX'S — Editor de Video &amp; Motion Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a09;
+    --bg-elevated:#141412;
+    --bg-card:#18170f;
+    --text:#f5f2ea;
+    --text-muted:#8c8879;
+    --gold:#c9a227;
+    --gold-bright:#e8c766;
+    --line:#2a2820;
+    --line-soft:#1c1b15;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'DM Sans',sans-serif;
+    font-weight:400;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--gold);color:var(--bg);}
+
+  /* film grain overlay */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    pointer-events:none;
+    opacity:.035;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  /* vignette */
+  body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:9998;
+    pointer-events:none;
+    background:radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,.55) 100%);
+  }
+
+  h1,h2,h3{font-family:'Space Grotesk',sans-serif;font-weight:600;letter-spacing:.01em;}
+
+  a{color:inherit;text-decoration:none;}
+
+  .container{max-width:1180px;margin:0 auto;padding:0 32px;}
+
+  /* NAV */
+  header{
+    position:fixed;top:0;left:0;right:0;
+    z-index:100;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:28px 48px;
+    mix-blend-mode:difference;
+  }
+  .logo{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:22px;
+    font-weight:700;
+    letter-spacing:.04em;
+  }
+  .logo span{color:var(--gold);}
+  nav{display:flex;gap:40px;}
+  nav a{
+    font-size:13px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    font-weight:600;
+    position:relative;
+    padding-bottom:4px;
+  }
+  nav a::after{
+    content:"";
+    position:absolute;left:0;bottom:0;
+    width:0;height:1px;
+    background:var(--gold);
+    transition:width .35s ease;
+  }
+  nav a:hover::after{width:100%;}
+  .nav-highlight{
+    color:var(--gold);
+    text-shadow:0 0 8px rgba(201,162,39,.65), 0 0 18px rgba(201,162,39,.35);
+    animation:navGlow 2.4s ease-in-out infinite;
+  }
+  @keyframes navGlow{
+    0%,100%{text-shadow:0 0 8px rgba(201,162,39,.55), 0 0 16px rgba(201,162,39,.3);}
+    50%{text-shadow:0 0 12px rgba(232,199,102,.85), 0 0 26px rgba(201,162,39,.5);}
+  }
+
+  .nav-toggle{display:none;}
+
+  /* HERO */
+  .hero{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    position:relative;
+    padding:150px 48px 90px;
+    max-width:1180px;
+    margin:0 auto;
+  }
+  .status-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    border:1px solid var(--line);
+    padding:7px 16px 7px 12px;
+    border-radius:100px;
+    font-size:11px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    font-weight:600;
+    color:var(--text-muted);
+    margin-bottom:24px;
+    width:fit-content;
+  }
+  .status-pill .dot{
+    width:7px;height:7px;
+    border-radius:50%;
+    background:#3ecf6b;
+    box-shadow:0 0 8px rgba(62,207,107,.7);
+  }
+  .hero-eyebrow{
+    font-size:12px;
+    letter-spacing:.3em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:22px;
+    display:flex;align-items:center;gap:14px;
+  }
+  .hero-eyebrow::before{
+    content:"";width:32px;height:1px;background:var(--gold);
+  }
+  .hero h1{
+    font-size:clamp(48px, 6.4vw, 96px);
+    line-height:.98;
+    letter-spacing:-.01em;
+    font-weight:700;
+  }
+  .hero h1 em{
+    font-style:italic;
+    color:var(--gold);
+    font-weight:400;
+  }
+
+  /* white glow hover effect — stable text-shadow technique, no flashing */
+  .shimmer-text{
+    cursor:default;
+    transition:text-shadow .5s ease;
+  }
+  .shimmer-text:hover{
+    text-shadow:
+      0 0 10px rgba(255,255,255,.55),
+      0 0 24px rgba(255,255,255,.28);
+  }
+  .shimmer-text em{
+    transition:text-shadow .5s ease;
+  }
+  .shimmer-text:hover em{
+    text-shadow:
+      0 0 10px rgba(232,199,102,.6),
+      0 0 24px rgba(201,162,39,.32);
+  }
+  .hero-sub{
+    max-width:520px;
+    margin-top:32px;
+    font-size:18px;
+    line-height:1.6;
+    color:var(--text-muted);
+  }
+  .hero-actions{
+    margin-top:48px;
+    display:flex;
+    gap:24px;
+    align-items:center;
+  }
+  .btn-primary{
+    background:var(--gold);
+    color:#0a0a09;
+    padding:16px 36px;
+    font-size:13px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    font-weight:700;
+    border-radius:2px;
+    transition:background .3s ease, transform .3s ease;
+    display:inline-block;
+  }
+  .btn-primary:hover{background:var(--gold-bright);transform:translateY(-2px);}
+  .btn-ghost{
+    font-size:13px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    font-weight:600;
+    border-bottom:1px solid var(--line);
+    padding-bottom:4px;
+    transition:border-color .3s ease;
+    display:inline-block;
+  }
+  .btn-ghost:hover{border-color:var(--gold);}
+
+  .hero-stats{
+    display:flex;
+    gap:40px;
+    flex-wrap:wrap;
+    margin-top:64px;
+    padding-top:32px;
+    border-top:1px solid var(--line);
+  }
+  .stat{text-align:left;}
+  .stat b{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:clamp(15px, 1.3vw, 20px);
+    display:block;
+    color:var(--gold);
+    white-space:nowrap;
+  }
+  .stat span{
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--text-muted);
+  }
+
+  /* PRICING */
+  .pricing-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:24px;
+  }
+  .price-card{
+    border:1px solid var(--line);
+    padding:40px 32px;
+    display:flex;
+    flex-direction:column;
+    background:var(--bg-elevated);
+    transition:border-color .3s ease, transform .3s ease;
+  }
+  .price-card:hover{border-color:var(--gold);transform:translateY(-4px);}
+  .price-card.featured{
+    border-color:var(--gold);
+    background:linear-gradient(160deg, #1a1710, #0f0e0a);
+    position:relative;
+  }
+  .price-card.featured::before{
+    content:"Más Elegido";
+    position:absolute;
+    top:-13px;left:32px;
+    background:var(--gold);
+    color:#0a0a09;
+    font-size:10px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    font-weight:700;
+    padding:5px 14px;
+    border-radius:100px;
+  }
+  .price-tag{
+    font-size:12px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--gold);
+    font-weight:600;
+  }
+  .price-amount{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:38px;
+    font-weight:700;
+    margin:16px 0 28px;
+  }
+  .price-amount span{
+    font-family:'DM Sans',sans-serif;
+    font-size:14px;
+    font-weight:400;
+    color:var(--text-muted);
+  }
+  .price-list{
+    list-style:none;
+    flex:1;
+    margin-bottom:32px;
+  }
+  .price-list li{
+    font-size:14px;
+    color:var(--text-muted);
+    padding:10px 0;
+    border-top:1px solid var(--line-soft);
+  }
+  .price-list li:first-child{border-top:none;}
+  .price-card .btn-primary, .price-card .btn-ghost{text-align:center;}
+
+  /* SECTION HEADERS */
+  .section{padding:140px 0;}
+  .section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    margin-bottom:64px;
+    flex-wrap:wrap;
+    gap:24px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:32px;
+  }
+  .section-eyebrow{
+    font-size:12px;
+    letter-spacing:.3em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:16px;
+  }
+  .section-head h2{
+    font-size:clamp(32px, 4vw, 52px);
+  }
+  .section-desc{
+    max-width:320px;
+    color:var(--text-muted);
+    font-size:15px;
+    line-height:1.6;
+  }
+
+  /* FILTERS */
+  .filters{
+    display:flex;
+    gap:12px;
+    margin-bottom:48px;
+    flex-wrap:wrap;
+  }
+  .filter-btn{
+    padding:10px 22px;
+    border:1px solid var(--line);
+    border-radius:100px;
+    font-size:12px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    font-weight:600;
+    color:var(--text-muted);
+    cursor:pointer;
+    background:transparent;
+    transition:all .3s ease;
+    font-family:'DM Sans',sans-serif;
+  }
+  .filter-btn:hover{color:var(--text);border-color:var(--text-muted);}
+  .filter-btn.active{
+    background:var(--gold);
+    border-color:var(--gold);
+    color:#0a0a09;
+  }
+
+  /* GRID */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:2px;
+    background:var(--line-soft);
+  }
+  .card{
+    background:var(--bg);
+    position:relative;
+    overflow:hidden;
+    cursor:pointer;
+    transition:transform .1s ease;
+  }
+  .card.wide{
+    grid-column:1 / -1;
+  }
+  .card-media{
+    position:relative;
+    aspect-ratio:16/9;
+    overflow:hidden;
+    background:linear-gradient(135deg, #1a1912, #0d0c08);
+  }
+  .card-media.vertical{
+    aspect-ratio:9/16;
+  }
+  .card-media video, .card-media .placeholder{
+    width:100%;height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  .play-overlay{
+    position:absolute;inset:0;
+    z-index:3;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(10,10,9,.25);
+    transition:background .3s ease;
+  }
+  .card:hover .play-overlay{background:rgba(10,10,9,.4);}
+  .play-overlay .play-icon{
+    width:60px;height:60px;
+    border:1px solid var(--gold);
+    border-radius:50%;
+    background:rgba(10,10,9,.55);
+    display:flex;align-items:center;justify-content:center;
+    transition:transform .3s ease, background .3s ease;
+  }
+  .card:hover .play-overlay .play-icon{
+    transform:scale(1.1);
+    background:var(--gold);
+  }
+  .card:hover .play-overlay .play-icon::after{
+    border-color:transparent transparent transparent #0a0a09;
+  }
+  .play-overlay .play-icon::after{
+    content:"";
+    border-style:solid;
+    border-width:9px 0 9px 15px;
+    border-color:transparent transparent transparent var(--gold);
+    margin-left:4px;
+    transition:border-color .3s ease;
+  }
+
+  /* PLAYER MODAL */
+  .player-modal{
+    position:fixed;inset:0;
+    z-index:1000;
+    background:rgba(6,6,5,.92);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:40px;
+  }
+  .player-modal.open{display:flex;}
+  .player-frame{
+    max-width:min(1000px, 90vw);
+    max-height:85vh;
+  }
+  .player-modal.vertical-video .player-frame{
+    max-width:min(420px, 90vw);
+  }
+  .player-frame video{
+    width:100%;
+    height:100%;
+    max-height:85vh;
+    display:block;
+    background:#000;
+  }
+  .player-close{
+    position:absolute;
+    top:24px;right:32px;
+    background:none;
+    border:1px solid var(--line);
+    color:var(--text);
+    width:44px;height:44px;
+    border-radius:50%;
+    font-size:24px;
+    line-height:1;
+    cursor:pointer;
+    transition:border-color .3s ease, color .3s ease;
+  }
+  .player-close:hover{border-color:var(--gold);color:var(--gold);}
+  .card-media .placeholder{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    gap:12px;
+    color:var(--text-muted);
+    font-size:11px;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+  }
+  .placeholder .play-icon{
+    width:52px;height:52px;
+    border:1px solid var(--gold);
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .placeholder .play-icon::after{
+    content:"";
+    border-style:solid;
+    border-width:8px 0 8px 13px;
+    border-color:transparent transparent transparent var(--gold);
+    margin-left:3px;
+  }
+  .card-media::after{
+    content:"";
+    position:absolute;inset:0;
+    background:linear-gradient(180deg, transparent 40%, rgba(0,0,0,.85) 100%);
+    opacity:.6;
+    transition:opacity .4s ease;
+  }
+  .card:hover .card-media::after{opacity:.85;}
+  .card:hover .card-media video{transform:scale(1.04);}
+  .card-media video{transition:transform .6s ease;}
+
+  .card-info{
+    position:absolute;
+    left:0;right:0;bottom:0;
+    padding:26px 28px;
+    z-index:2;
+  }
+  .card-tag{
+    font-size:10px;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    color:var(--gold);
+    font-weight:700;
+    margin-bottom:8px;
+    display:block;
+  }
+  .card-info h3{
+    font-size:24px;
+    margin-bottom:6px;
+  }
+  .card-info p{
+    font-size:13px;
+    color:var(--text-muted);
+    line-height:1.5;
+    max-width:400px;
+  }
+
+
+  /* ABOUT */
+  .about{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:80px;
+    align-items:center;
+  }
+  .about-visual{
+    aspect-ratio:4/5;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(201,162,39,.15), transparent 60%),
+      linear-gradient(160deg, #17160f, #0a0a09);
+    border:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+  }
+  .about-visual .moon{
+    width:140px;height:140px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 35%, var(--gold-bright), var(--gold) 60%, #6b5518 100%);
+    box-shadow:0 0 80px rgba(201,162,39,.25);
+  }
+  .about-text p{
+    font-size:17px;
+    line-height:1.75;
+    color:var(--text-muted);
+    margin-bottom:24px;
+  }
+  .about-text strong{color:var(--text);font-weight:600;}
+  .tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:32px;
+  }
+  .tag{
+    border:1px solid var(--line);
+    padding:8px 18px;
+    border-radius:100px;
+    font-size:12px;
+    letter-spacing:.05em;
+    color:var(--text-muted);
+  }
+
+
+  /* CONTACT */
+  .contact{
+    text-align:center;
+    padding:160px 0;
+    border-top:1px solid var(--line);
+  }
+  .contact h2{
+    font-size:clamp(40px, 7vw, 88px);
+    margin-bottom:32px;
+  }
+  .contact h2 em{color:var(--gold);font-style:italic;font-weight:400;}
+  .contact-links{
+    display:flex;
+    gap:32px;
+    justify-content:center;
+    margin-top:56px;
+    flex-wrap:wrap;
+  }
+  .contact-links a{
+    font-size:13px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    font-weight:600;
+    padding-bottom:6px;
+    border-bottom:1px solid var(--line);
+    transition:border-color .3s ease, color .3s ease;
+  }
+  .contact-links a:hover{border-color:var(--gold);color:var(--gold);}
+
+  footer{
+    padding:32px 48px;
+    display:flex;
+    justify-content:space-between;
+    font-size:11px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--text-muted);
+    border-top:1px solid var(--line);
+    flex-wrap:wrap;
+    gap:12px;
+  }
+
+  @media (max-width: 780px){
+    nav a[href="#sobre-mi"]{display:none;}
+    .container{padding:0 22px;}
+    header{padding:20px 22px;}
+    nav{gap:20px;}
+    nav a{font-size:11px;}
+    .hero{padding:110px 22px 60px;min-height:auto;}
+    .hero h1{font-size:clamp(34px, 11.5vw, 58px);overflow-wrap:anywhere;}
+    .hero-sub{font-size:16px;max-width:100%;}
+    .hero-actions{flex-wrap:wrap;gap:14px;margin-top:36px;}
+    .btn-primary{padding:14px 28px;}
+    .btn-ghost{
+      border:1px solid var(--line);
+      border-bottom:1px solid var(--line);
+      padding:14px 28px;
+      border-radius:2px;
+    }
+    .hero-stats{
+      position:static;
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      left:auto;right:auto;bottom:auto;
+      margin-top:44px;
+      padding-top:24px;
+      gap:14px;
+    }
+    .stat b{white-space:normal;line-height:1.2;}
+    .section{padding:80px 0;}
+    .section-head{margin-bottom:44px;padding-bottom:24px;}
+    .section-desc{max-width:100%;}
+    .grid{grid-template-columns:1fr;}
+    .hide-mobile{display:none;}
+    .card-info{padding:20px 20px;}
+    .card-info h3{font-size:20px;}
+    .about{grid-template-columns:1fr;gap:40px;}
+    .pricing-grid{grid-template-columns:1fr;gap:20px;}
+    .price-card{padding:32px 26px;}
+    .contact{padding:100px 0;}
+    .contact-links{gap:20px 28px;}
+    footer{padding:26px 22px;flex-direction:column;text-align:center;}
+  }
+
+  @media (max-width: 460px){
+    .logo{font-size:19px;}
+    nav{gap:14px;}
+    nav a{font-size:10px;letter-spacing:.08em;}
+    .hero h1{font-size:clamp(30px, 12.5vw, 44px);}
+    .hero-eyebrow{font-size:11px;gap:10px;margin-bottom:20px;}
+    .hero-actions{flex-direction:column;align-items:flex-start;}
+    .btn-primary,.btn-ghost{width:100%;text-align:center;}
+    .hero-stats{gap:20px;}
+    .stat b{font-size:18px;}
+    .section-head h2{font-size:28px;}
+    .about-text h2{font-size:28px !important;}
+    .contact h2{font-size:clamp(32px, 10vw, 44px);}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Nox<span>'s</span></div>
+  <nav>
+    <a href="#trabajos">Trabajos</a>
+    <a href="#sobre-mi">Sobre Mí</a>
+    <a href="precios.html" class="nav-highlight">Precios</a>
+    <a href="#contacto">Contacto</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="status-pill"><span class="dot"></span>Disponible para nuevos proyectos</div>
+  <div class="hero-eyebrow">Editor de Video</div>
+  <h1 class="shimmer-text">VISUAL<br><em>STORYTELLER</em></h1>
+  <p class="hero-sub">Convierto tu marca o tu contenido en historias que generan conexión real y resultados.</p>
+  <div class="hero-actions">
+    <a href="#trabajos" class="btn-primary">Ver Trabajos</a>
+    <a href="#contacto" class="btn-ghost">Hablemos</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><b>+5</b><span>Años Editando</span></div>
+    <div class="stat"><b>Marcas &amp; Contenido</b><span>Especialidades</span></div>
+    <div class="stat"><b>Vertical &amp; Horizontal</b><span>Formatos</span></div>
+  </div>
+</section>
+
+<section class="section" id="trabajos">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="section-eyebrow">Portafolio</div>
+        <h2>Trabajos Seleccionados</h2>
+      </div>
+      <p class="section-desc">Una muestra de campañas para marcas y ediciones para creadores de contenido.</p>
+    </div>
+
+    <div class="filters">
+      <button class="filter-btn active" data-filter="ads">Ads &amp; Marcas</button>
+      <button class="filter-btn" data-filter="creator">Creador de Contenido</button>
+    </div>
+
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<section class="section" id="sobre-mi">
+  <div class="container">
+    <div class="about">
+      <div class="about-visual"><div class="moon"></div></div>
+      <div class="about-text">
+        <div class="section-eyebrow">Sobre Mí</div>
+        <h2 style="font-size:38px;margin-bottom:24px;">Cuento historias entre luces y sombras.</h2>
+        <p>Soy editor de video y motion designer freelance, especializado en dos mundos: <strong>campañas de marca</strong> que necesitan claridad y persuasión, y <strong>contenido de creadores</strong> que necesita ritmo y personalidad.</p>
+        <p>Integro herramientas de video generativo con IA en mi flujo de producción para acelerar entregas sin sacrificar calidad visual.</p>
+        <div class="tags">
+          <span class="tag">Edición Narrativa</span>
+          <span class="tag">Motion Graphics</span>
+          <span class="tag">Video con IA</span>
+          <span class="tag">Reels &amp; Shorts</span>
+          <span class="tag">Color Grading</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contacto">
+  <div class="container">
+    <div class="section-eyebrow">¿Hablamos?</div>
+    <h2>Creemos algo <em>épico</em>.</h2>
+    <p class="hero-sub" style="margin:0 auto;text-align:center;">Cuéntame tu proyecto y armamos la propuesta ideal para tu marca o tu canal.</p>
+    <div class="contact-links">
+      <a href="mailto:tucorreo@ejemplo.com">Email</a>
+      <a href="https://wa.me/52XXXXXXXXXX" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="https://instagram.com/tuusuario" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://youtube.com/@tucanal" target="_blank" rel="noopener">YouTube</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 NOX'S. Todos los derechos reservados.</span>
+  <span>Tampico, México</span>
+</footer>
+
+<div class="player-modal" id="playerModal">
+  <button class="player-close" id="playerClose" aria-label="Cerrar">&times;</button>
+  <div class="player-frame">
+    <video id="playerVideo" controls playsinline></video>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   PROYECTOS — edita este arreglo para agregar/quitar trabajos.
+   category: "ads" o "creator"
+   video: pon el link directo a tu .mp4 (Imgur, etc.) para autoplay,
+          o deja null para mostrar el placeholder mientras consigues el link.
+   ========================================================= */
+const projects = [
+  {
+    category: "ads",
+    tag: "Ads & Marcas",
+    title: "PokeBurrito",
+    desc: "Campaña de temporada de invierno.",
+    orientation: "vertical",
+    video: "videos/pokeburrito-reel.mp4",
+    hideMobile: true
+  },
+  {
+    category: "ads",
+    tag: "Ads & Marcas",
+    title: "Jardines de Miramar — Bienes Raíces",
+    desc: "Publicidad para dar a conocer JDM y su promoción.",
+    orientation: "vertical",
+    video: "videos/jdm-bienes-raices.mp4"
+  },
+  {
+    category: "ads",
+    tag: "Ads & Marcas",
+    title: "Creatify — Stickers Personalizados",
+    desc: "Publicidad para la página de Creatify en formato horizontal.",
+    orientation: "horizontal",
+    video: "videos/creatify-stickers.mp4"
+  },
+  {
+    category: "ads",
+    tag: "Ads & Marcas",
+    title: "Plennik Vital — 8 Horas",
+    desc: "Publicidad para conocer la terapia hiperbárica.",
+    orientation: "vertical",
+    video: "videos/plennik-vital-8horas.mp4"
+  },
+  {
+    category: "ads",
+    tag: "Ads & Marcas",
+    title: "Servicio Automotriz Vincent",
+    desc: "Promoción de engrasado + nitrógeno.",
+    orientation: "vertical",
+    video: "videos/vincent-engrasado.mp4"
+  },
+  {
+    category: "creator",
+    tag: "Creador de Contenido",
+    title: "Minecraft — Adivina el Mineral",
+    desc: "Contenido para canal de Minecraft.",
+    orientation: "vertical",
+    video: "videos/minecraft-adivina-mineral.mp4"
+  },
+  {
+    category: "creator",
+    tag: "Creador de Contenido",
+    title: "League of Legends — Controversia de Lux",
+    desc: "Contenido para canal de League of Legends.",
+    orientation: "vertical",
+    video: "videos/lol-controversia-lux.mp4"
+  },
+  {
+    category: "creator",
+    tag: "Creador de Contenido",
+    title: "Edición Gaming — Clip Destacado",
+    desc: "Montaje de ritmo rápido para contenido de gaming.",
+    orientation: "horizontal",
+    video: null   // ejemplo: "videos/gaming-clip1.mp4"
+  }
+];
+
+const grid = document.getElementById('grid');
+
+function render(filter){
+  grid.innerHTML = '';
+  projects
+    .filter(p => filter === 'all' || p.category === filter)
+    .forEach(p => {
+      const card = document.createElement('div');
+      card.className = p.orientation === 'horizontal' ? 'card wide' : 'card';
+      if(p.hideMobile) card.className += ' hide-mobile';
+      const orientationClass = p.orientation === 'vertical' ? ' vertical' : '';
+      card.innerHTML = `
+        <div class="card-media${orientationClass}">
+          ${p.video
+            ? `<video src="${p.video}" muted playsinline preload="metadata"></video>
+               <div class="play-overlay"><div class="play-icon"></div></div>`
+            : `<div class="placeholder"><div class="play-icon"></div>Video próximamente</div>`
+          }
+        </div>
+        <div class="card-info">
+          <span class="card-tag">${p.tag}</span>
+          <h3>${p.title}</h3>
+          <p>${p.desc}</p>
+        </div>
+      `;
+      if(p.video){
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', () => openPlayer(p.video, p.orientation));
+      }
+      grid.appendChild(card);
+    });
+}
+
+render('ads');
+
+/* ===== Reproductor modal ===== */
+const playerModal = document.getElementById('playerModal');
+const playerVideo = document.getElementById('playerVideo');
+
+function openPlayer(src, orientation){
+  playerVideo.src = src;
+  playerModal.classList.toggle('vertical-video', orientation === 'vertical');
+  playerModal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  playerVideo.play().catch(()=>{});
+}
+
+function closePlayer(){
+  playerModal.classList.remove('open');
+  document.body.style.overflow = '';
+  playerVideo.pause();
+  playerVideo.src = '';
+}
+
+document.getElementById('playerClose').addEventListener('click', closePlayer);
+playerModal.addEventListener('click', (e) => {
+  if(e.target === playerModal) closePlayer();
+});
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape') closePlayer();
+});
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    render(btn.dataset.filter);
+  });
+});
+</script>
+
+</body>
+</html>
