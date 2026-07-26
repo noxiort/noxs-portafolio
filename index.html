@@ -383,7 +383,7 @@
   .card-media.vertical{
     aspect-ratio:9/16;
   }
-  .card-media video, .card-media .placeholder{
+  .card-media video, .card-media img, .card-media .placeholder{
     width:100%;height:100%;
     object-fit:cover;
     display:block;
@@ -447,6 +447,20 @@
     display:block;
     background:#000;
   }
+  .youtube-frame{
+    display:none;
+    width:min(1000px, 90vw);
+    aspect-ratio:16/9;
+    background:#000;
+  }
+  .youtube-frame iframe{
+    width:100%;
+    height:100%;
+    border:0;
+    display:block;
+  }
+  .player-modal.youtube-active .player-frame video{display:none;}
+  .player-modal.youtube-active .youtube-frame{display:block;}
   .player-close{
     position:absolute;
     top:24px;right:32px;
@@ -761,6 +775,7 @@
   <button class="player-close" id="playerClose" aria-label="Cerrar">&times;</button>
   <div class="player-frame">
     <video id="playerVideo" controls playsinline></video>
+    <div id="youtubeFrame" class="youtube-frame"></div>
   </div>
 </div>
 
@@ -832,10 +847,11 @@ const projects = [
   {
     category: "creator",
     tag: "Creador de Contenido",
-    title: "Edición Gaming — Clip Destacado",
-    desc: "Montaje de ritmo rápido para contenido de gaming.",
+    title: "Edición de Contenido — League of Legends",
+    desc: "Contenido narrativo para un canal de League of Legends.",
     orientation: "horizontal",
-    video: null   // ejemplo: "videos/gaming-clip1.mp4"
+    video: null,
+    youtube: "ss3cxhy1kdc"
   }
 ];
 
@@ -852,7 +868,10 @@ function render(filter){
       const orientationClass = p.orientation === 'vertical' ? ' vertical' : '';
       card.innerHTML = `
         <div class="card-media${orientationClass}">
-          ${p.video
+          ${p.youtube
+            ? `<img src="https://img.youtube.com/vi/${p.youtube}/hqdefault.jpg" alt="${p.title}">
+               <div class="play-overlay"><div class="play-icon"></div></div>`
+            : p.video
             ? `<video src="${p.video}" muted playsinline preload="metadata"></video>
                <div class="play-overlay"><div class="play-icon"></div></div>`
             : `<div class="placeholder"><div class="play-icon"></div>Video próximamente</div>`
@@ -864,7 +883,10 @@ function render(filter){
           <p>${p.desc}</p>
         </div>
       `;
-      if(p.video){
+      if(p.youtube){
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', () => openPlayer(null, p.orientation, p.youtube));
+      } else if(p.video){
         card.style.cursor = 'pointer';
         card.addEventListener('click', () => openPlayer(p.video, p.orientation));
       }
@@ -877,13 +899,21 @@ render('ads');
 /* ===== Reproductor modal ===== */
 const playerModal = document.getElementById('playerModal');
 const playerVideo = document.getElementById('playerVideo');
+const youtubeFrame = document.getElementById('youtubeFrame');
 
-function openPlayer(src, orientation){
-  playerVideo.src = src;
+function openPlayer(src, orientation, youtubeId){
   playerModal.classList.toggle('vertical-video', orientation === 'vertical');
   playerModal.classList.add('open');
   document.body.style.overflow = 'hidden';
-  playerVideo.play().catch(()=>{});
+
+  if(youtubeId){
+    playerModal.classList.add('youtube-active');
+    youtubeFrame.innerHTML = `<iframe src="https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0" title="${youtubeId}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+  } else {
+    playerModal.classList.remove('youtube-active');
+    playerVideo.src = src;
+    playerVideo.play().catch(()=>{});
+  }
 }
 
 function closePlayer(){
@@ -891,6 +921,7 @@ function closePlayer(){
   document.body.style.overflow = '';
   playerVideo.pause();
   playerVideo.src = '';
+  youtubeFrame.innerHTML = '';
 }
 
 document.getElementById('playerClose').addEventListener('click', closePlayer);
