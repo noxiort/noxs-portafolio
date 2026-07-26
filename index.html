@@ -360,7 +360,7 @@
   /* GRID */
   .grid{
     display:grid;
-    grid-template-columns:repeat(3, 1fr);
+    grid-template-columns:repeat(2, 1fr);
     gap:28px;
   }
   .card{
@@ -383,10 +383,12 @@
     position:relative;
     aspect-ratio:16/9;
     overflow:hidden;
+    max-height:460px;
     background:linear-gradient(135deg, #1a1912, #0d0c08);
   }
   .card-media.vertical{
     aspect-ratio:9/16;
+    max-height:460px;
   }
   .card-media video, .card-media img, .card-media .placeholder{
     width:100%;height:100%;
@@ -816,14 +818,6 @@ const projects = [
   {
     category: "ads",
     tag: "Ads & Marcas",
-    title: "Creatify — Stickers Personalizados",
-    desc: "Publicidad para la página de Creatify en formato horizontal.",
-    orientation: "horizontal",
-    video: "videos/creatify-stickers.mp4"
-  },
-  {
-    category: "ads",
-    tag: "Ads & Marcas",
     title: "Plennik Vital — 8 Horas",
     desc: "Publicidad para conocer la terapia hiperbárica.",
     orientation: "vertical",
@@ -836,6 +830,14 @@ const projects = [
     desc: "Promoción de engrasado + nitrógeno.",
     orientation: "vertical",
     video: "videos/vincent-engrasado.mp4"
+  },
+  {
+    category: "ads",
+    tag: "Ads & Marcas",
+    title: "Creatify — Stickers Personalizados",
+    desc: "Publicidad para la página de Creatify en formato horizontal.",
+    orientation: "horizontal",
+    video: "videos/creatify-stickers.mp4"
   },
   {
     category: "creator",
