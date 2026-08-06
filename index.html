@@ -194,7 +194,7 @@
     letter-spacing:.1em;
     text-transform:uppercase;
     font-weight:700;
-    border-radius:2px;
+    border-radius:100px;
     transition:background .3s ease, transform .3s ease;
     display:inline-block;
   }
@@ -397,6 +397,7 @@
   }
   .card-media{
     position:relative;
+    width:100%;
     aspect-ratio:16/9;
     overflow:hidden;
     background:linear-gradient(135deg, #1a1912, #0d0c08);
@@ -540,7 +541,7 @@
   .card-info{
     position:absolute;
     left:0;right:0;bottom:0;
-    padding:26px 28px;
+    padding:28px 28px 26px;
     z-index:2;
   }
   .card-tag{
@@ -549,17 +550,18 @@
     text-transform:uppercase;
     color:var(--gold);
     font-weight:700;
-    margin-bottom:8px;
+    margin-bottom:10px;
     display:block;
   }
   .card-info h3{
-    font-size:24px;
-    margin-bottom:6px;
+    font-size:22px;
+    line-height:1.2;
+    margin-bottom:10px;
   }
   .card-info p{
     font-size:13px;
-    color:var(--text-muted);
     line-height:1.5;
+    color:var(--text-muted);
     max-width:400px;
   }
 
@@ -639,21 +641,35 @@
   }
   .contact-links{
     display:flex;
-    gap:32px;
+    gap:16px;
     justify-content:center;
     margin-top:56px;
     flex-wrap:wrap;
   }
   .contact-links a{
-    font-size:13px;
-    letter-spacing:.1em;
-    text-transform:uppercase;
-    font-weight:600;
-    padding-bottom:6px;
-    border-bottom:1px solid var(--line);
-    transition:border-color .3s ease, color .3s ease;
+    font-size:14px;
+    font-weight:700;
+    padding:16px 32px;
+    border-radius:100px;
+    transition:transform .3s ease, background .3s ease, border-color .3s ease;
   }
-  .contact-links a:hover{border-color:var(--gold);color:var(--gold);}
+  .contact-links a:first-child{
+    background:var(--gold);
+    color:#0a0a09;
+  }
+  .contact-links a:first-child:hover{
+    background:var(--gold-bright);
+    transform:translateY(-2px);
+  }
+  .contact-links a:not(:first-child){
+    background:transparent;
+    color:var(--text);
+    border:1px solid var(--line);
+  }
+  .contact-links a:not(:first-child):hover{
+    border-color:var(--gold);
+    color:var(--gold);
+  }
 
   .site-footer{
     border-top:1px solid var(--line);
@@ -735,7 +751,7 @@
       border:1px solid var(--line);
       border-bottom:1px solid var(--line);
       padding:14px 28px;
-      border-radius:2px;
+      border-radius:100px;
     }
     .hero-stats{
       position:static;
@@ -759,7 +775,7 @@
     .pricing-grid{grid-template-columns:1fr;gap:20px;}
     .price-card{padding:32px 26px;}
     .contact{padding:100px 0;}
-    .contact-links{gap:20px 28px;}
+    .contact-links{gap:14px;}
     .footer-top{grid-template-columns:1fr;gap:36px;padding-bottom:40px;}
     .footer-brand p{max-width:100%;}
     .footer-bottom{flex-direction:column;text-align:center;padding:22px 0;}
@@ -837,6 +853,7 @@
         <h2 style="font-size:38px;margin-bottom:24px;">Versatilidad con criterio</h2>
         <p>Trabajo tanto en <strong>campañas de marca</strong> como en <strong>contenido de creadores</strong> — dos lenguajes distintos, pero la misma exigencia: retener la atención desde el primer segundo.</p>
         <p>Manejo formato largo y corto, con storytelling y técnicas de retención pensadas para cada plataforma. Combino técnica y creatividad para que cada proyecto no solo se vea bien, sino que conecte y emocione a quien lo ve.</p>
+        <p style="font-size:13px;color:var(--text-muted);margin-top:32px;">Detrás de Nox's está Leo — por si prefieres llamarme así.</p>
         <div class="tags">
         </div>
       </div>
@@ -848,12 +865,10 @@
   <div class="container">
     <div class="section-eyebrow" style="justify-content:center;">Contacto</div>
     <h2 class="contact-heading"><span class="line-bold">¿Tu contenido ya genera</span><span class="line-accent">esa conexión?</span></h2>
-    <p class="hero-sub" style="margin:0 auto;text-align:center;">Trabajo con marcas y creadores que buscan algo más que solo publicar.</p>
+    <p class="hero-sub" style="margin:0 auto;text-align:center;">Colaboro con marcas y creadores que buscan algo más que solo publicar.</p>
     <div class="contact-links">
-      <a href="mailto:tucorreo@ejemplo.com">Email</a>
       <a href="https://wa.me/52XXXXXXXXXX" target="_blank" rel="noopener">WhatsApp</a>
-      <a href="https://instagram.com/tuusuario" target="_blank" rel="noopener">Instagram</a>
-      <a href="https://youtube.com/@tucanal" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://discord.gg/tuinvite" target="_blank" rel="noopener">Discord</a>
     </div>
   </div>
 </section>
@@ -873,9 +888,8 @@
     </div>
     <div class="footer-col">
       <h4>Contacto</h4>
-      <a href="mailto:tucorreo@ejemplo.com">Email</a>
       <a href="https://wa.me/52XXXXXXXXXX" target="_blank" rel="noopener">WhatsApp</a>
-      <a href="https://instagram.com/tuusuario" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://discord.gg/tuinvite" target="_blank" rel="noopener">Discord</a>
     </div>
   </div>
   <div class="container footer-bottom">
@@ -913,7 +927,7 @@ const projects = [
     category: "ads",
     tag: "Ads & Marcas",
     title: "Jardines de Miramar — Bienes Raíces",
-    desc: "Publicidad para dar a conocer JDM y su promoción.",
+    desc: "Campaña para posicionar JDM y su promoción vigente.",
     orientation: "vertical",
     video: "videos/jdm-bienes-raices.mp4"
   },
@@ -921,7 +935,7 @@ const projects = [
     category: "ads",
     tag: "Ads & Marcas",
     title: "Plennik Vital — 8 Horas",
-    desc: "Publicidad para conocer la terapia hiperbárica.",
+    desc: "Pieza informativa sobre la terapia hiperbárica.",
     orientation: "vertical",
     video: "videos/plennik-vital-8horas.mp4"
   },
@@ -937,7 +951,7 @@ const projects = [
     category: "ads",
     tag: "Ads & Marcas",
     title: "Creatify — Stickers Personalizados",
-    desc: "Publicidad para la página de Creatify en formato horizontal.",
+    desc: "Anuncio horizontal para la página de Creatify.",
     orientation: "horizontal",
     video: "videos/creatify-stickers.mp4"
   },
@@ -986,7 +1000,7 @@ function render(filter){
             ? `<img src="https://img.youtube.com/vi/${p.youtube}/hqdefault.jpg" alt="${p.title}">
                <div class="play-overlay"><div class="play-icon"></div></div>`
             : p.video
-            ? `<video src="${p.video}" muted playsinline preload="metadata"></video>
+            ? `<video src="${p.video}#t=0.1" muted playsinline preload="auto"></video>
                <div class="play-overlay"><div class="play-icon"></div></div>`
             : `<div class="placeholder"><div class="play-icon"></div>Video próximamente</div>`
           }
