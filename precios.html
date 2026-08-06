@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230a0a09'/%3E%3Ctext x='50' y='70' font-family='Georgia, serif' font-size='58' font-weight='700' fill='%23c9a227' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230a0a09'/%3E%3Ctext x='50' y='70' font-family='Space Grotesk, sans-serif' font-size='58' font-weight='700' fill='%23c9a227' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Precios — Nox's</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -52,6 +52,8 @@
   }
 
   h1,h2,h3{font-family:'Space Grotesk',sans-serif;font-weight:600;letter-spacing:.01em;}
+  .mixed-heading{font-weight:700;}
+  .mixed-heading em{font-style:italic;font-weight:400;color:var(--gold);}
 
   a{color:inherit;text-decoration:none;}
 
@@ -234,19 +236,6 @@
     background:linear-gradient(160deg, #1a1710, #0f0e0a);
     position:relative;
   }
-  .price-card.featured::before{
-    content:"Más Elegido";
-    position:absolute;
-    top:-13px;left:32px;
-    background:var(--gold);
-    color:#0a0a09;
-    font-size:10px;
-    letter-spacing:.1em;
-    text-transform:uppercase;
-    font-weight:700;
-    padding:5px 14px;
-    border-radius:100px;
-  }
   .price-tag{
     font-size:12px;
     letter-spacing:.1em;
@@ -298,6 +287,14 @@
     text-transform:uppercase;
     color:var(--gold);
     margin-bottom:16px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+  }
+  .section-eyebrow::before{
+    content:"";
+    width:32px;height:1px;
+    background:var(--gold);
   }
   .section-head h2{
     font-size:clamp(32px, 4vw, 52px);
@@ -502,17 +499,65 @@
   }
   .contact-links a:hover{border-color:var(--gold);color:var(--gold);}
 
-  footer{
-    padding:32px 48px;
-    display:flex;
-    justify-content:space-between;
-    font-size:11px;
+  .site-footer{
+    border-top:1px solid var(--line);
+    padding-top:72px;
+  }
+  .footer-top{
+    display:grid;
+    grid-template-columns:1.6fr 1fr 1fr;
+    gap:48px;
+    padding-bottom:56px;
+  }
+  .footer-brand .logo{
+    margin-bottom:16px;
+  }
+  .footer-brand p{
+    font-size:14px;
+    line-height:1.6;
+    color:var(--text-muted);
+    max-width:340px;
+  }
+  .footer-col h4{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:13px;
     letter-spacing:.08em;
     text-transform:uppercase;
+    color:var(--text);
+    margin-bottom:20px;
+  }
+  .footer-col a{
+    display:block;
+    font-size:14px;
     color:var(--text-muted);
-    border-top:1px solid var(--line);
+    margin-bottom:14px;
+    transition:color .3s ease;
+  }
+  .footer-col a:hover{color:var(--gold);}
+  .footer-bottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
     flex-wrap:wrap;
     gap:12px;
+    padding:28px 0;
+    border-top:1px solid var(--line);
+    font-size:11px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--text-muted);
+  }
+  .footer-tagline{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-style:italic;
+    text-transform:none;
+    letter-spacing:normal;
+    font-size:14px;
+    background:linear-gradient(100deg, var(--gold-bright), var(--gold) 50%, var(--gold-bright));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
   }
 </style>
 <style>
@@ -523,7 +568,20 @@
   }
   .precios-hero h1{
     font-size:clamp(40px, 6vw, 72px);
-    line-height:1;
+    line-height:1.05;
+  }
+  .precios-hero h1 .line-bold{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    display:block;
+  }
+  .precios-hero h1 .line-accent{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:400;
+    font-style:italic;
+    color:var(--gold);
+    font-size:1em;
+    display:block;
   }
   .precios-hero p{
     max-width:560px;
@@ -541,9 +599,11 @@
   }
   .price-card{
     border:1px solid var(--line);
-    padding:40px 32px;
+    padding:48px 32px;
     display:flex;
     flex-direction:column;
+    align-items:center;
+    text-align:center;
     background:var(--bg-elevated);
     transition:border-color .3s ease, transform .3s ease;
   }
@@ -553,51 +613,68 @@
     background:linear-gradient(160deg, #1a1710, #0f0e0a);
     position:relative;
   }
-  .price-card.featured::before{
-    content:"Más Elegido";
-    position:absolute;
-    top:-13px;left:32px;
-    background:var(--gold);
-    color:#0a0a09;
-    font-size:10px;
-    letter-spacing:.1em;
-    text-transform:uppercase;
-    font-weight:700;
-    padding:5px 14px;
-    border-radius:100px;
-  }
   .price-tag{
-    font-size:12px;
-    letter-spacing:.1em;
+    font-family:'DM Sans',sans-serif;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.12em;
     text-transform:uppercase;
     color:var(--gold);
-    font-weight:600;
+  }
+  .price-title{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:22px;
+    font-weight:700;
+    color:var(--text);
+    margin-top:10px;
+    line-height:1.3;
   }
   .price-amount{
-    font-family:'Space Grotesk',sans-serif;
-    font-size:38px;
-    font-weight:700;
-    margin:16px 0 28px;
-  }
-  .price-amount span{
     font-family:'DM Sans',sans-serif;
-    font-size:14px;
+    font-size:16px;
     font-weight:400;
-    color:var(--text-muted);
+    margin:22px 0 26px;
+    color:var(--text);
+    display:flex;
+    align-items:baseline;
+    gap:6px;
   }
-  .price-list{
-    list-style:none;
-    flex:1;
-    margin-bottom:32px;
+  .price-amount .price-num{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:40px;
+    font-weight:700;
+    color:var(--gold);
+    line-height:1;
   }
-  .price-list li{
+  .price-amount .price-currency{
+    font-family:'DM Sans',sans-serif;
+    font-size:16px;
+    font-weight:700;
+    letter-spacing:.05em;
+    color:var(--text);
+  }
+  .price-card .btn-primary, .price-card .btn-ghost{
+    text-align:center;
+    margin-top:auto;
+    width:100%;
+  }
+  .btn-pill{
+    display:block;
+    background:#000000;
+    color:var(--text);
+    border:1px solid var(--line);
+    padding:16px 28px;
+    border-radius:100px;
     font-size:14px;
-    color:var(--text-muted);
-    padding:10px 0;
-    border-top:1px solid var(--line-soft);
+    font-weight:600;
+    text-align:center;
+    width:100%;
+    transition:border-color .3s ease, background .3s ease;
   }
-  .price-list li:first-child{border-top:none;}
-  .price-card .btn-primary, .price-card .btn-ghost{text-align:center;}
+  .btn-pill:hover{
+    border-color:var(--gold);
+    background:#111;
+  }
 
   /* ADD-ONS */
   .addons{
@@ -637,6 +714,11 @@
     white-space:nowrap;
   }
 
+  .process h2{
+    font-size:clamp(28px, 4vw, 44px);
+    margin-top:8px;
+  }
+
   /* PROCESS */
   .process{
     padding:80px 0;
@@ -645,20 +727,54 @@
   .process-steps{
     display:grid;
     grid-template-columns:repeat(3, 1fr);
-    gap:32px;
     margin-top:48px;
+    border-top:1px solid var(--line);
   }
-  .process-step .num{
+  .process-step{
+    padding:32px 32px 8px;
+    border-left:1px solid var(--line);
+  }
+  .process-step:first-child{
+    border-left:none;
+    padding-left:0;
+  }
+  .process-step:not(:first-child){
+    padding-left:32px;
+  }
+  .step-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:24px;
+  }
+  .step-label{
+    font-size:11px;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    color:var(--text-muted);
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .step-label::before{
+    content:"";
+    width:20px;height:1px;
+    background:var(--text-muted);
+  }
+  .step-num{
     font-family:'Space Grotesk',sans-serif;
-    font-size:14px;
-    color:var(--gold);
+    font-size:44px;
     font-weight:700;
-    margin-bottom:12px;
+    background:linear-gradient(135deg, var(--gold-bright), var(--gold) 60%, #6b5518);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
   }
   .process-step h4{
     font-family:'Space Grotesk',sans-serif;
     font-size:19px;
-    margin-bottom:8px;
+    margin-bottom:10px;
   }
   .process-step p{
     font-size:14px;
@@ -707,7 +823,9 @@
     .price-card{padding:32px 26px;}
     .addons-grid{grid-template-columns:1fr;}
     .addon-item{padding:22px 24px;flex-direction:column;align-items:flex-start;gap:8px;}
-    .process-steps{grid-template-columns:1fr;gap:36px;}
+    .process-steps{grid-template-columns:1fr;border-top:none;}
+    .process-step{border-left:none;border-top:1px solid var(--line);padding:28px 0;}
+    .process-step:first-child{border-top:1px solid var(--line);padding-left:0;}
     .addons,.process,.faq{padding:56px 0;}
     .precios-cta{padding:70px 0 100px;}
   }
@@ -749,7 +867,9 @@
     .price-card{padding:32px 26px;}
     .contact{padding:100px 0;}
     .contact-links{gap:20px 28px;}
-    footer{padding:26px 22px;flex-direction:column;text-align:center;}
+    .footer-top{grid-template-columns:1fr;gap:36px;padding-bottom:40px;}
+    .footer-brand p{max-width:100%;}
+    .footer-bottom{flex-direction:column;text-align:center;padding:22px 0;}
   }
 
   @media (max-width: 460px){
@@ -784,8 +904,8 @@
 <section class="precios-hero">
   <div class="container">
     <div class="hero-eyebrow">Inversión</div>
-    <h1>Precios claros,<br>sin sorpresas.</h1>
-    <p>Cada proyecto es distinto, así que estos paquetes son un punto de partida. Cotizo según duración, complejidad y tiempos de entrega que necesites.</p>
+    <h1><span class="line-bold">Cada proyecto es distinto.</span><span class="line-accent">Los precios también</span></h1>
+    <p>Cada proyecto varía según duración y complejidad. Aquí un rango orientativo para que tengas una idea antes de cotizar.</p>
   </div>
 </section>
 
@@ -793,95 +913,27 @@
   <div class="container">
     <div class="pricing-grid">
       <div class="price-card">
-        <span class="price-tag">Shorts &amp; Reels</span>
-        <div class="price-amount">$XXX<span>/ video</span></div>
-        <ul class="price-list">
-          <li>Edición vertical 9:16</li>
-          <li>Ritmo dinámico + subtítulos</li>
-          <li>Música y efectos de sonido</li>
-          <li>1-2 revisiones</li>
-          <li>Entrega en 48-72h</li>
-        </ul>
-        <a href="index.html#contacto" class="btn-ghost">Cotizar</a>
-      </div>
-
-      <div class="price-card featured">
-        <span class="price-tag">Video Estándar</span>
-        <div class="price-amount">$XXX<span>/ video</span></div>
-        <ul class="price-list">
-          <li>Vertical u horizontal</li>
-          <li>Motion graphics básico</li>
-          <li>Color grading</li>
-          <li>Subtítulos y texto animado</li>
-          <li>2-3 revisiones</li>
-          <li>Entrega en 3-5 días</li>
-        </ul>
-        <a href="index.html#contacto" class="btn-primary">Cotizar</a>
+        <span class="price-tag">Shorts, Reels &amp; TikToks</span>
+        <p class="price-title">Contenido corto y dinámico</p>
+        <div class="price-amount"><span class="price-num">$12–15</span><span class="price-currency">USD</span></div>
+        <a href="index.html#contacto" class="btn-pill">Cotizar</a>
+        <p style="font-size:12px;color:var(--text-muted);margin-top:20px;font-style:italic;">Precio de referencia. Varía según duración y complejidad.</p>
       </div>
 
       <div class="price-card">
-        <span class="price-tag">Paquete Marca</span>
-        <div class="price-amount">Desde $XXX<span>/ mes</span></div>
-        <ul class="price-list">
-          <li>Varios videos al mes</li>
-          <li>Motion graphics avanzado</li>
-          <li>Video generado con IA</li>
-          <li>Identidad visual consistente</li>
-          <li>Revisiones ilimitadas</li>
-          <li>Prioridad de entrega</li>
-        </ul>
-        <a href="index.html#contacto" class="btn-ghost">Cotizar</a>
+        <span class="price-tag">Publicidad / Ads de Marca</span>
+        <p class="price-title">Formato vertical para marcas</p>
+        <div class="price-amount"><span class="price-num">$20</span><span class="price-currency">USD</span></div>
+        <a href="index.html#contacto" class="btn-pill">Cotizar</a>
+        <p style="font-size:12px;color:var(--text-muted);margin-top:20px;font-style:italic;">Precio de referencia. Varía según duración y complejidad.</p>
       </div>
-    </div>
-  </div>
-</section>
 
-<section class="addons">
-  <div class="container">
-    <div class="section-eyebrow">Extras</div>
-    <h2>Servicios adicionales</h2>
-    <div class="addons-grid">
-      <div class="addon-item">
-        <div>
-          <h4>Motion graphics extra</h4>
-          <p>Animaciones, lower-thirds o gráficos personalizados</p>
-        </div>
-        <span class="addon-price">+$XXX</span>
-      </div>
-      <div class="addon-item">
-        <div>
-          <h4>Video con IA (Veo)</h4>
-          <p>Clips generados por IA integrados a tu edición</p>
-        </div>
-        <span class="addon-price">+$XXX</span>
-      </div>
-      <div class="addon-item">
-        <div>
-          <h4>Entrega urgente</h4>
-          <p>Menos de 24h desde que recibo el material</p>
-        </div>
-        <span class="addon-price">+$XXX</span>
-      </div>
-      <div class="addon-item">
-        <div>
-          <h4>Revisión extra</h4>
-          <p>Ronda de cambios adicional fuera del paquete</p>
-        </div>
-        <span class="addon-price">+$XXX</span>
-      </div>
-      <div class="addon-item">
-        <div>
-          <h4>Formato adicional</h4>
-          <p>Misma pieza adaptada a otro formato (ej. 9:16 → 16:9)</p>
-        </div>
-        <span class="addon-price">+$XXX</span>
-      </div>
-      <div class="addon-item">
-        <div>
-          <h4>Guion / storyboard</h4>
-          <p>Planeación de contenido antes de grabar o generar</p>
-        </div>
-        <span class="addon-price">+$XXX</span>
+      <div class="price-card">
+        <span class="price-tag">Contenido Largo para Creadores</span>
+        <p class="price-title">Formato horizontal, edición narrativa</p>
+        <div class="price-amount"><span class="price-num">$45–50</span><span class="price-currency">USD</span></div>
+        <a href="index.html#contacto" class="btn-pill">Cotizar</a>
+        <p style="font-size:12px;color:var(--text-muted);margin-top:20px;font-style:italic;">Precio de referencia. Varía según duración y complejidad.</p>
       </div>
     </div>
   </div>
@@ -890,20 +942,29 @@
 <section class="process">
   <div class="container">
     <div class="section-eyebrow">Cómo trabajamos</div>
-    <h2>Proceso simple, en 3 pasos</h2>
+    <h2 class="mixed-heading">Proceso simple, <em>en 3 pasos</em></h2>
     <div class="process-steps">
       <div class="process-step">
-        <div class="num">01</div>
+        <div class="step-top">
+          <span class="step-label">Paso</span>
+          <span class="step-num">01</span>
+        </div>
         <h4>Cuéntame tu proyecto</h4>
         <p>Me compartes tu material, referencias y objetivo. Te doy una cotización clara según lo que necesitas.</p>
       </div>
       <div class="process-step">
-        <div class="num">02</div>
+        <div class="step-top">
+          <span class="step-label">Paso</span>
+          <span class="step-num">02</span>
+        </div>
         <h4>Edición y ajustes</h4>
-        <p>Trabajo el primer corte y lo revisamos juntos. Ajusto según tus comentarios dentro de las revisiones incluidas.</p>
+        <p>Trabajo en la edición y, si lo necesitas, te comparto avances para ajustar cambios sobre la marcha.</p>
       </div>
       <div class="process-step">
-        <div class="num">03</div>
+        <div class="step-top">
+          <span class="step-label">Paso</span>
+          <span class="step-num">03</span>
+        </div>
         <h4>Entrega final</h4>
         <p>Recibes tu video listo, en el formato y calidad acordados, dentro del tiempo de entrega definido.</p>
       </div>
@@ -918,19 +979,15 @@
 
     <div class="faq-item">
       <h4>¿Cómo funciona el pago?</h4>
-      <p>Normalmente se maneja un anticipo antes de empezar y el resto contra entrega. Para paquetes mensuales, se factura al inicio de cada mes.</p>
+      <p>Normalmente se maneja un anticipo antes de empezar y el resto contra entrega.</p>
     </div>
     <div class="faq-item">
-      <h4>¿Qué pasa si necesito más revisiones de las incluidas?</h4>
-      <p>Sin problema — las revisiones extra se cobran por separado, como se detalla en "Servicios adicionales" arriba.</p>
+      <h4>¿Cuántas revisiones incluye cada video?</h4>
+      <p>El número de revisiones se acuerda según el proyecto — lo hablamos antes de empezar para que quede claro para ambos.</p>
     </div>
     <div class="faq-item">
       <h4>¿Trabajas con clientes fuera de México?</h4>
       <p>Sí, trabajo de forma remota con clientes en distintos países. Podemos coordinar pagos internacionales sin problema.</p>
-    </div>
-    <div class="faq-item">
-      <h4>¿Puedo pedir solo un video de prueba antes de un paquete mensual?</h4>
-      <p>Claro, es una excelente forma de empezar. Muchos clientes arrancan con un video individual antes de pasar al Paquete Marca.</p>
     </div>
   </div>
 </section>
@@ -943,9 +1000,30 @@
   </div>
 </section>
 
-<footer>
-  <span>© 2026 Nox's. Todos los derechos reservados.</span>
-  <span>Tampico, México</span>
+<footer class="site-footer">
+  <div class="container footer-top">
+    <div class="footer-brand">
+      <a href="index.html" class="logo" style="pointer-events:auto;">Nox<span>'s</span></a>
+      <p>Me adapto al proyecto y a lo que tu audiencia necesita ver.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Menú</h4>
+      <a href="index.html#trabajos">Trabajos</a>
+      <a href="index.html#sobre-mi">Mi Enfoque</a>
+      <a href="precios.html">Precios</a>
+      <a href="index.html#contacto">Contacto</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contacto</h4>
+      <a href="mailto:tucorreo@ejemplo.com">Email</a>
+      <a href="https://wa.me/52XXXXXXXXXX" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="https://instagram.com/tuusuario" target="_blank" rel="noopener">Instagram</a>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>© 2026 Nox's. Todos los derechos reservados.</span>
+    <span class="footer-tagline">Ritmo, historia, impacto.</span>
+  </div>
 </footer>
 
 </body>
