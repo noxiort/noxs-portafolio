@@ -508,10 +508,22 @@
   .player-modal.youtube-active .youtube-frame{display:block;}
   .player-modal.youtube-active .center-toggle,
   .player-modal.youtube-active .volume-vertical,
-  .player-modal.youtube-active .seek-bottom,
-  .player-modal.youtube-active .fs-corner-btn{display:none;}
+  .player-modal.youtube-active .seek-bottom{display:none;}
 
   /* CUSTOM PLAYER CONTROLS */
+  .center-toggle,
+  .volume-vertical,
+  .seek-bottom{
+    opacity:1;
+    transition:opacity .35s ease;
+  }
+  .player-frame.controls-hidden .center-toggle,
+  .player-frame.controls-hidden .volume-vertical,
+  .player-frame.controls-hidden .seek-bottom{
+    opacity:0;
+    pointer-events:none;
+  }
+
   .center-toggle{
     position:absolute;
     top:50%;left:50%;
@@ -525,7 +537,7 @@
     justify-content:center;
     cursor:pointer;
     color:#fff;
-    transition:background .2s ease, opacity .3s ease;
+    transition:background .2s ease, opacity .35s ease;
     z-index:5;
   }
   .center-toggle:hover{background:rgba(10,10,9,.65);}
@@ -545,29 +557,6 @@
   }
   .player-frame.is-playing .icon-play-lg{display:none;}
   .player-frame.is-playing .icon-pause-lg{display:flex;}
-
-  .fs-corner-btn{
-    position:absolute;
-    top:16px;right:16px;
-    width:32px;height:32px;
-    border-radius:50%;
-    background:rgba(10,10,9,.5);
-    border:none;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-    color:#fff;
-    z-index:5;
-    transition:background .2s ease, color .2s ease;
-  }
-  .fs-corner-btn:hover{background:rgba(10,10,9,.75);color:var(--gold);}
-  .icon-fullscreen{
-    width:13px;height:13px;
-    border:2px solid currentColor;
-    border-radius:2px;
-    display:block;
-  }
 
   .volume-vertical{
     position:absolute;
@@ -1048,16 +1037,12 @@
 <div class="player-modal" id="playerModal">
   <button class="player-close" id="playerClose" aria-label="Cerrar">&times;</button>
   <div class="player-frame" id="playerFrame">
-    <video id="playerVideo" playsinline></video>
+    <video id="playerVideo" playsinline preload="auto"></video>
     <div id="youtubeFrame" class="youtube-frame"></div>
 
     <button class="center-toggle" id="centerToggle" aria-label="Reproducir/Pausa">
       <span class="icon-play-lg"></span>
       <span class="icon-pause-lg"></span>
-    </button>
-
-    <button class="fs-corner-btn" id="fullscreenBtn" aria-label="Pantalla completa">
-      <span class="icon-fullscreen"></span>
     </button>
 
     <div class="volume-vertical" id="volumeVertical">
@@ -1205,7 +1190,6 @@ const progressHandle = document.getElementById('progressHandle');
 const volumeTrack = document.getElementById('volumeTrack');
 const volumeFill = document.getElementById('volumeFill');
 const volumeHandle = document.getElementById('volumeHandle');
-const fullscreenBtn = document.getElementById('fullscreenBtn');
 
 function openPlayer(src, orientation, youtubeId){
   playerModal.classList.toggle('vertical-video', orientation === 'vertical');
@@ -1258,6 +1242,25 @@ function togglePlay(){
 centerToggle.addEventListener('click', togglePlay);
 playerVideo.addEventListener('click', togglePlay);
 
+/* Auto-ocultar controles */
+let hideControlsTimer;
+function showControls(){
+  playerFrame.classList.remove('controls-hidden');
+  clearTimeout(hideControlsTimer);
+  if(!playerVideo.paused){
+    hideControlsTimer = setTimeout(() => {
+      playerFrame.classList.add('controls-hidden');
+    }, 2200);
+  }
+}
+playerFrame.addEventListener('mousemove', showControls);
+playerFrame.addEventListener('touchstart', showControls);
+playerVideo.addEventListener('play', showControls);
+playerVideo.addEventListener('pause', () => {
+  playerFrame.classList.remove('controls-hidden');
+  clearTimeout(hideControlsTimer);
+});
+
 /* Progress bar */
 function updateProgress(){
   if(!playerVideo.duration) return;
@@ -1308,15 +1311,6 @@ window.addEventListener('mouseup', () => { adjustingVolume = false; });
 volumeTrack.addEventListener('touchstart', (e) => { adjustingVolume = true; volumeFromEvent(e); });
 window.addEventListener('touchmove', (e) => { if(adjustingVolume) volumeFromEvent(e); });
 window.addEventListener('touchend', () => { adjustingVolume = false; });
-
-/* Fullscreen */
-fullscreenBtn.addEventListener('click', () => {
-  if(playerFrame.requestFullscreen){
-    playerFrame.requestFullscreen();
-  } else if(playerFrame.webkitRequestFullscreen){
-    playerFrame.webkitRequestFullscreen();
-  }
-});
 
 document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
