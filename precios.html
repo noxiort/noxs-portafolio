@@ -483,21 +483,35 @@
   .contact h2 em{color:var(--gold);font-style:italic;font-weight:400;}
   .contact-links{
     display:flex;
-    gap:32px;
+    gap:16px;
     justify-content:center;
     margin-top:56px;
     flex-wrap:wrap;
   }
   .contact-links a{
-    font-size:13px;
-    letter-spacing:.1em;
-    text-transform:uppercase;
-    font-weight:600;
-    padding-bottom:6px;
-    border-bottom:1px solid var(--line);
-    transition:border-color .3s ease, color .3s ease;
+    font-size:14px;
+    font-weight:700;
+    padding:16px 32px;
+    border-radius:100px;
+    transition:transform .3s ease, background .3s ease, border-color .3s ease;
   }
-  .contact-links a:hover{border-color:var(--gold);color:var(--gold);}
+  .contact-links a:first-child{
+    background:var(--gold);
+    color:#0a0a09;
+  }
+  .contact-links a:first-child:hover{
+    background:var(--gold-bright);
+    transform:translateY(-2px);
+  }
+  .contact-links a:not(:first-child){
+    background:transparent;
+    color:var(--text);
+    border:1px solid var(--line);
+  }
+  .contact-links a:not(:first-child):hover{
+    border-color:var(--gold);
+    color:var(--gold);
+  }
 
   .site-footer{
     border-top:1px solid var(--line);
@@ -866,7 +880,7 @@
     .pricing-grid{grid-template-columns:1fr;gap:20px;}
     .price-card{padding:32px 26px;}
     .contact{padding:100px 0;}
-    .contact-links{gap:20px 28px;}
+    .contact-links{gap:14px;}
     .footer-top{grid-template-columns:1fr;gap:36px;padding-bottom:40px;}
     .footer-brand p{max-width:100%;}
     .footer-bottom{flex-direction:column;text-align:center;padding:22px 0;}
@@ -1004,7 +1018,10 @@
   <div class="container">
     <h2>¿Listo para <em style="color:var(--gold);font-style:italic;">empezar?</em></h2>
     <p>Cuéntame tu proyecto y recibirás una cotización a tu medida.</p>
-    <a href="index.html#contacto" class="btn-primary">Hablemos</a>
+    <div class="contact-links">
+      <a href="https://wa.me/52XXXXXXXXXX" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="https://discord.gg/tuinvite" target="_blank" rel="noopener">Discord</a>
+    </div>
   </div>
 </section>
 
